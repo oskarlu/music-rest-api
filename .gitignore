@@ -1,15 +1,18 @@
-.idea
+
+# Maven
 .mvn
-target/
+mvn*
 
-
-
-
+# IntelliJ
+*.iml
+.idea
+HELP.md
 
 
 
 # Compiled class file
 *.class
+target/
 
 # Log file
 *.log
