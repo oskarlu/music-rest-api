@@ -1,45 +1,71 @@
 package com.oskarlund.musicapi.web;
 
+import com.oskarlund.musicapi.clients.CoverArtArchiveClient;
+import com.oskarlund.musicapi.clients.DiscogsClient;
 import com.oskarlund.musicapi.clients.MusicBrainzClient;
-import com.oskarlund.musicapi.clients.dtos.MBArtist;
+import com.oskarlund.musicapi.clients.dtos.*;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Optional;
 
 
 @RestController
 @RequestMapping("/restapi")
 public class RestApiController {
 
-    private MusicBrainzClient musicBrainzClient;
+    private final MusicBrainzClient musicBrainzClient;
+    private CoverArtArchiveClient coverArtArchiveClient;
+    private DiscogsClient discogsClient;
 
-    public RestApiController(MusicBrainzClient musicBrainzClient) {
+    public RestApiController(MusicBrainzClient musicBrainzClient, CoverArtArchiveClient coverArtArchiveClient, DiscogsClient discogsClient) {
         this.musicBrainzClient = musicBrainzClient;
+        this.coverArtArchiveClient = coverArtArchiveClient;
+        this.discogsClient = discogsClient;
     }
 
-    @GetMapping("/artist/{mbid}")
-    String getArtist(@PathVariable("mbid") String mbId) {
-        System.out.println("Request start. MBID = _" +mbId+"_");
+    @GetMapping(value = "/artist/{mbid}", produces = MediaType.APPLICATION_JSON_VALUE)
+    ResponseEntity getArtist(@PathVariable("mbid") String mbId) {
 
         String nirvana = "5b11f4ce-a62d-471e-81fc-a69a8278c7da";
         String mj = "f27ec8db-af05-4f36-916e-3d57f91ecf5e";
 
-
         mbId = mbId.isEmpty() ? nirvana : mbId;
 
-        MBArtist res = musicBrainzClient.getArtist(mbId);
+        MBArtist mb = musicBrainzClient.getArtist(mbId);
 
-        System.out.println("Artist name = " + res.getName());
+        String artId = mb.getReleaseGroups().get(0).getId();
 
-        if (!res.getReleaseGroups().isEmpty()) {
-            System.out.println("First Album = " + res.getReleaseGroups().get(0).getTitle());
-            System.out.println("Total albums: " + res.getReleaseGroups().size());
+        CAACoverArt art = coverArtArchiveClient.getCoverArt(artId);
+
+        Optional<CAAImage> front = art.getImages().stream().filter(e -> e.isFront()).findFirst();
+
+
+                    System.out.println((front.isPresent() ? front.get().getImage() : "no front cover found"));
+
+
+        Optional<MBRelations> discogs = mb.getRelations().stream()
+            .filter(e -> e.getType().equals("discogs")).findFirst();
+
+
+        if (discogs.isPresent()) {
+
+            String res = discogs.get().getUrl().get("resource");
+
+            String artistId = res.substring(res.lastIndexOf("/"));
+
+            DiscogsDto discogsDto = discogsClient.getArtist(artistId);
+
+                        System.out.println(discogsDto.getProfile());
+
         }
 
-        System.out.println(res.toString());
 
-        System.out.println("Request end.");
-        return String.format("You want info on artist with MBID %s", mbId);
+
+        return ResponseEntity.ok(mb);
     }
 }

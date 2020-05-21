@@ -8,6 +8,7 @@ public class MBArtist {
     private String id;
     private String name;
     private List<MBReleaseGroup> releaseGroups = new ArrayList<>();
+    private List<MBRelations> relations = new ArrayList<>();
 
     public MBArtist() { }
 
@@ -21,6 +22,10 @@ public class MBArtist {
 
     public List<MBReleaseGroup> getReleaseGroups() {
         return releaseGroups;
+    }
+
+    public List<MBRelations> getRelations() {
+        return relations;
     }
 
     @Override

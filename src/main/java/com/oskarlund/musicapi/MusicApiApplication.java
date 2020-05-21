@@ -11,14 +11,14 @@ import org.springframework.context.annotation.Configuration;
 @SpringBootApplication
 @EnableFeignClients
 @Configuration
-public class DemoApplication {
+public class MusicApiApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(DemoApplication.class, args);
+		SpringApplication.run(MusicApiApplication.class, args);
 	}
 
 	@Bean
 	Logger.Level feignLoggerLevel() {
-		return Logger.Level.BASIC;
+		return Logger.Level.FULL;
 	}
 }
