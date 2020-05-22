@@ -3,15 +3,10 @@ package com.oskarlund.musicapi.clients.dtos;
 
 public class CAAImage {
 
-	private long id;
 	private boolean front;
 	private String image;
 
 	public CAAImage() {	}
-
-	public long getId() {
-		return id;
-	}
 
 	public boolean isFront() {
 		return front;
@@ -24,8 +19,7 @@ public class CAAImage {
 	@Override
 	public String toString() {
 		return "CAAImage{" +
-			"id=" + id +
-			", front=" + front +
+			"front=" + front +
 			", image='" + image + '\'' +
 			'}';
 	}

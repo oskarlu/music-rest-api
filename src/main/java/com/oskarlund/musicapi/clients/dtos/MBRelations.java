@@ -6,7 +6,7 @@ import java.util.Map;
 
 public class MBRelations {
 
-	private String type;  // will filter on "discogs"
+	private String type;  // to filter on "discogs"
 	private Map<String, String> url;
 
 	public MBRelations() { }

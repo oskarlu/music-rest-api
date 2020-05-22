@@ -11,7 +11,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.*;
+import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.toList;
 
 
 @RestController
@@ -19,8 +24,8 @@ import java.util.Optional;
 public class RestApiController {
 
     private final MusicBrainzClient musicBrainzClient;
-    private CoverArtArchiveClient coverArtArchiveClient;
-    private DiscogsClient discogsClient;
+    private final CoverArtArchiveClient coverArtArchiveClient;
+    private final DiscogsClient discogsClient;
 
     public RestApiController(MusicBrainzClient musicBrainzClient, CoverArtArchiveClient coverArtArchiveClient, DiscogsClient discogsClient) {
         this.musicBrainzClient = musicBrainzClient;
@@ -29,43 +34,55 @@ public class RestApiController {
     }
 
     @GetMapping(value = "/artist/{mbid}", produces = MediaType.APPLICATION_JSON_VALUE)
-    ResponseEntity getArtist(@PathVariable("mbid") String mbId) {
+    ResponseEntity<ResponseJson> getArtist(@PathVariable("mbid") String mbId) {
 
-        String nirvana = "5b11f4ce-a62d-471e-81fc-a69a8278c7da";
-        String mj = "f27ec8db-af05-4f36-916e-3d57f91ecf5e";
+        ResponseJsonBuilder responseBuilder = ResponseJsonBuilder.create();
 
-        mbId = mbId.isEmpty() ? nirvana : mbId;
+        MBArtist artist = musicBrainzClient.getArtist(mbId);
+        responseBuilder.artist(artist);
 
-        MBArtist mb = musicBrainzClient.getArtist(mbId);
+        // Fetching covers async and in parallel so we can do Discogs in the meantime
+        Future<Void> covertArt = fetchCoverArt(artist, responseBuilder);
 
-        String artId = mb.getReleaseGroups().get(0).getId();
-
-        CAACoverArt art = coverArtArchiveClient.getCoverArt(artId);
-
-        Optional<CAAImage> front = art.getImages().stream().filter(e -> e.isFront()).findFirst();
-
-
-                    System.out.println((front.isPresent() ? front.get().getImage() : "no front cover found"));
-
-
-        Optional<MBRelations> discogs = mb.getRelations().stream()
+        Optional<MBRelations> discogs = artist.getRelations().stream()
             .filter(e -> e.getType().equals("discogs")).findFirst();
 
-
         if (discogs.isPresent()) {
-
-            String res = discogs.get().getUrl().get("resource");
-
-            String artistId = res.substring(res.lastIndexOf("/"));
-
+            String url = discogs.get().getUrl().get("resource");
+            String artistId = url.substring(url.lastIndexOf("/"));
             DiscogsDto discogsDto = discogsClient.getArtist(artistId);
-
-                        System.out.println(discogsDto.getProfile());
-
+            responseBuilder.description(discogsDto.getProfile());
+        } else {
+            responseBuilder.description("No description found on Discogs");
         }
 
+        try {
+            System.out.println("BLOCKING on cover art Future to complete before we're done.");
+            covertArt.get(); // block here until all cover art has been fetched
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
 
+        return ResponseEntity.ok(responseBuilder.build());
+    }
 
-        return ResponseEntity.ok(mb);
+    public Future<Void> fetchCoverArt(MBArtist artist, ResponseJsonBuilder rb) {
+        return CompletableFuture.allOf(artist.getReleaseGroups().stream()
+            .map(rg -> fetchCoverArt(rg, rb)).toArray(CompletableFuture[]::new));
+    }
+
+    public Future<Void> fetchCoverArt(MBReleaseGroup rg, ResponseJsonBuilder responseBuilder) {
+        return CompletableFuture.runAsync(() -> responseBuilder.cover(fetchCoverArt(rg)));
+    }
+
+    private CAACoverArt fetchCoverArt(MBReleaseGroup rg) {
+        try {
+            CAACoverArt cover = coverArtArchiveClient.getCoverArt(rg.getId());
+            cover.setId(rg.getId());  // since it's not in the api response but we need to merge this with the release-groups from MB
+            return cover;
+        } catch (Exception e) {
+            System.out.println("*** Exception when getting cover for " + rg.getId());
+        }
+        return new CAACoverArt(rg.getId());
     }
 }

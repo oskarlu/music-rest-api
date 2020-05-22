@@ -1,29 +1,38 @@
 package com.oskarlund.musicapi.clients.dtos;
 
 
-import java.util.List;
+import java.util.Collection;
+import java.util.Collections;
 
 
 public class CAACoverArt {
 
-	private String release; // TODO:  delete, not needed in any way
-	private List<CAAImage> images;
+	private String id;
+	private Collection<CAAImage> images;
 
 	public CAACoverArt() {}
 
-	public String getRelease() {
-		return release;
+	public CAACoverArt(String id) {
+		this.id = id;
+		this.images = Collections.emptyList();
 	}
 
-	public List<CAAImage> getImages() {
+	public String getId() {
+		return id;
+	}
+
+	public Collection<CAAImage> getImages() {
 		return images;
+	}
+
+	public void setId(String id) {
+		this.id = id;
 	}
 
 	@Override
 	public String toString() {
 		return "CAACoverArt{" +
-			"release='" + release + '\'' +
-			", images=" + images +
+			"id='" + id + '\'' +
 			'}';
 	}
 }
