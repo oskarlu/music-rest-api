@@ -1,7 +1,6 @@
-package com.oskarlund.musicapi.clients;
+package com.oskarlund.musicapi.coverartarchive;
 
 
-import com.oskarlund.musicapi.clients.dtos.CAACoverArt;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;

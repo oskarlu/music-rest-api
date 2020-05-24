@@ -1,9 +1,13 @@
 package com.oskarlund.musicapi.web;
 
-import com.oskarlund.musicapi.clients.CoverArtArchiveClient;
-import com.oskarlund.musicapi.clients.DiscogsClient;
-import com.oskarlund.musicapi.clients.MusicBrainzClient;
-import com.oskarlund.musicapi.clients.dtos.*;
+import com.oskarlund.musicapi.coverartarchive.CAACoverArt;
+import com.oskarlund.musicapi.coverartarchive.CoverArtArchiveClient;
+import com.oskarlund.musicapi.discogs.DiscogsClient;
+import com.oskarlund.musicapi.discogs.DiscogsDto;
+import com.oskarlund.musicapi.musicbrainz.MBArtist;
+import com.oskarlund.musicapi.musicbrainz.MBRelations;
+import com.oskarlund.musicapi.musicbrainz.MBReleaseGroup;
+import com.oskarlund.musicapi.musicbrainz.MusicBrainzClient;
 import feign.FeignException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -1,10 +1,10 @@
 package com.oskarlund.musicapi.web;
 
 
-import com.oskarlund.musicapi.clients.dtos.CAACoverArt;
-import com.oskarlund.musicapi.clients.dtos.CAAImage;
-import com.oskarlund.musicapi.clients.dtos.MBArtist;
-import com.oskarlund.musicapi.clients.dtos.MBReleaseGroup;
+import com.oskarlund.musicapi.coverartarchive.CAACoverArt;
+import com.oskarlund.musicapi.coverartarchive.CAAImage;
+import com.oskarlund.musicapi.musicbrainz.MBArtist;
+import com.oskarlund.musicapi.musicbrainz.MBReleaseGroup;
 
 import java.util.Collection;
 import java.util.Map;

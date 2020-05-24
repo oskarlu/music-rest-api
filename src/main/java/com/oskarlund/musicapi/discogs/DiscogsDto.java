@@ -1,4 +1,4 @@
-package com.oskarlund.musicapi.clients.dtos;
+package com.oskarlund.musicapi.discogs;
 
 
 public class DiscogsDto {

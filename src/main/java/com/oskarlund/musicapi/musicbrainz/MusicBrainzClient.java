@@ -1,6 +1,5 @@
-package com.oskarlund.musicapi.clients;
+package com.oskarlund.musicapi.musicbrainz;
 
-import com.oskarlund.musicapi.clients.dtos.MBArtist;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;

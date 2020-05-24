@@ -1,7 +1,6 @@
-package com.oskarlund.musicapi.clients;
+package com.oskarlund.musicapi.discogs;
 
 
-import com.oskarlund.musicapi.clients.dtos.DiscogsDto;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;

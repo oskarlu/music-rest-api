@@ -1,4 +1,4 @@
-package com.oskarlund.musicapi.clients.dtos;
+package com.oskarlund.musicapi.coverartarchive;
 
 
 import java.util.Collection;
