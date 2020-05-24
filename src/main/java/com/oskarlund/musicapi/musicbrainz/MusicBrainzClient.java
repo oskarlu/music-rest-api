@@ -15,5 +15,5 @@ public interface MusicBrainzClient {
         // Nirvana: http://musicbrainz.org/ws/2/artist/5b11f4ce-a62d-471e-81fc-a69a8278c7da?inc=aliases&fmt=json
 
         @GetMapping(value = "artist/{mbid}?inc=release-groups+url-rels&fmt=json", consumes = MediaType.APPLICATION_JSON_VALUE)
-        MBArtist getArtist(final @PathVariable("mbid") String mbId);
+        MBArtist fetchArtist(final @PathVariable("mbid") String mbId);
 }

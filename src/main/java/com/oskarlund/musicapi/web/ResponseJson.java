@@ -45,4 +45,15 @@ public class ResponseJson {
 			", albums=" + albums +
 			'}';
 	}
+
+	public static class Error {
+
+		private String error;
+		private int status;
+
+		public Error(String error, int status) {
+			this.error = error;
+			this.status = status;
+		}
+	}
 }

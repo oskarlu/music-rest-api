@@ -1,8 +1,7 @@
-package com.oskarlund.musicapi;
+package com.oskarlund.musicapi.coverartarchive;
 
 
-import com.oskarlund.musicapi.coverartarchive.CAACoverArt;
-import com.oskarlund.musicapi.coverartarchive.CoverArtArchiveClient;
+import com.oskarlund.musicapi.CoverArtManager;
 import com.oskarlund.musicapi.musicbrainz.MBArtist;
 import com.oskarlund.musicapi.musicbrainz.MBReleaseGroup;
 import com.oskarlund.musicapi.web.ResponseJsonBuilder;
@@ -18,7 +17,7 @@ public class CoverArtManagerImpl implements CoverArtManager {
 
 	private static final Logger LOG = LoggerFactory.getLogger(CoverArtManagerImpl.class);
 
-	private CoverArtArchiveClient client;
+	private final CoverArtArchiveClient client;
 
 	public CoverArtManagerImpl(CoverArtArchiveClient client) {
 		this.client = client;
