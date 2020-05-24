@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 public interface CoverArtArchiveClient {
 
 	@GetMapping(value = "/release-group/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
-	CAACoverArt getCoverArt(final @PathVariable("id") String id);
+	CAACoverArt fetchCoverArt(final @PathVariable("id") String id);
 }
 
 /*

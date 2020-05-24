@@ -8,5 +8,5 @@ import java.util.List;
 
 public interface DescriptionManager {
 
-	String getDescription(List<MBRelations> relations);
+	String fetchDescription(List<MBRelations> relations);
 }

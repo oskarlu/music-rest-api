@@ -1,12 +1,10 @@
 package com.oskarlund.musicapi.web;
 
+
+import com.oskarlund.musicapi.CoverArtManager;
 import com.oskarlund.musicapi.DescriptionManager;
-import com.oskarlund.musicapi.coverartarchive.CAACoverArt;
-import com.oskarlund.musicapi.coverartarchive.CoverArtArchiveClient;
 import com.oskarlund.musicapi.musicbrainz.MBArtist;
-import com.oskarlund.musicapi.musicbrainz.MBReleaseGroup;
 import com.oskarlund.musicapi.musicbrainz.MusicBrainzClient;
-import feign.FeignException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -16,7 +14,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.concurrent.*;
+import java.util.concurrent.Future;
 
 
 @RestController
@@ -26,12 +24,12 @@ public class RestApiController {
     private static final Logger LOG = LoggerFactory.getLogger(RestApiController.class);
 
     private final MusicBrainzClient musicBrainzClient;
-    private final CoverArtArchiveClient coverArtArchiveClient;
+    private final CoverArtManager coverArtManager;
     private final DescriptionManager descriptionManager;
 
-    public RestApiController(MusicBrainzClient musicBrainzClient, CoverArtArchiveClient coverArtArchiveClient, DescriptionManager descriptionManager) {
+    public RestApiController(MusicBrainzClient musicBrainzClient, CoverArtManager coverArtManager, DescriptionManager descriptionManager) {
         this.musicBrainzClient = musicBrainzClient;
-        this.coverArtArchiveClient = coverArtArchiveClient;
+        this.coverArtManager = coverArtManager;
         this.descriptionManager = descriptionManager;
     }
 
@@ -43,46 +41,24 @@ public class RestApiController {
         MBArtist artist = musicBrainzClient.getArtist(mbId);
         responseBuilder.artist(artist);
 
-        // Fetching covers async and in parallel so we can fetch description in the meantime
-        Future<Void> covertArt = fetchCoverArt(artist, responseBuilder);
 
-        
+        // Fetching covers async and in parallel so we can fetch description in the meantime
+        Future<Void> covertArtFuture = coverArtManager.fetchCoverArtAsync(artist, responseBuilder);
+
+
         // We could have a DescriptionManager implementation for any of the artists relations. In our case it's Discogs.
-        String description = descriptionManager.getDescription(artist.getRelations());
+        String description = descriptionManager.fetchDescription(artist.getRelations());
         responseBuilder.description(description);
 
 
         try {
             LOG.trace("BLOCKING on cover art Future to complete before we're done.");
-            covertArt.get(); // block here until all cover art has been fetched
-        } catch (InterruptedException | ExecutionException e) {
+            covertArtFuture.get(); // block here until all cover art has been fetched
+        } catch (Exception e) {
             LOG.error("Exception when blocking to wait for cover art.", e);
+            // Anything gone wrong with cover art is not catastrophic so we still respond normally
         }
 
         return ResponseEntity.ok(responseBuilder.build());
-    }
-
-    public Future<Void> fetchCoverArt(MBArtist artist, ResponseJsonBuilder rb) {
-        return CompletableFuture.allOf(artist.getReleaseGroups().stream()
-            .map(rg -> fetchCoverArt(rg, rb)).toArray(CompletableFuture[]::new));
-    }
-
-    public Future<Void> fetchCoverArt(MBReleaseGroup rg, ResponseJsonBuilder responseBuilder) {
-        return CompletableFuture.runAsync(() -> responseBuilder.cover(fetchCoverArt(rg)));
-    }
-
-    private CAACoverArt fetchCoverArt(MBReleaseGroup rg) {
-        try {
-            CAACoverArt cover = coverArtArchiveClient.getCoverArt(rg.getId());
-            cover.setId(rg.getId());  // since it's not in the api response but we need to merge this with the release-groups from MB
-            return cover;
-        } catch (FeignException e) {
-            // FeignClient exceptions will be due to external api response so not much we can do about it, hence just "warn"
-            LOG.warn("Failed to get cover for \"{}\" due to \"{}\"", rg.getTitle(), e.getMessage());
-        } catch (Exception e) {
-            // Any other exceptions might be more serious, hence "error"
-            LOG.error("Failed to get cover for \"{}\".", rg.getTitle(), e);
-        }
-        return new CAACoverArt(rg.getId()); // essentially returning "<no cover art>"
     }
 }

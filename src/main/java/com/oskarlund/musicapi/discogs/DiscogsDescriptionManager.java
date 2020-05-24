@@ -22,7 +22,7 @@ public class DiscogsDescriptionManager implements DescriptionManager {
 	}
 
 	@Override
-	public String getDescription(List<MBRelations> relations) {
+	public String fetchDescription(List<MBRelations> relations) {
 		Optional<MBRelations> discogs = relations.stream()
 			.filter(e -> e.getType().equals("discogs")).findFirst();
 

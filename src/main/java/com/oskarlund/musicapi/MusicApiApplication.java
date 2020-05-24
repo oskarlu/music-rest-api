@@ -1,5 +1,6 @@
 package com.oskarlund.musicapi;
 
+import com.oskarlund.musicapi.coverartarchive.CoverArtArchiveClient;
 import com.oskarlund.musicapi.discogs.DiscogsClient;
 import com.oskarlund.musicapi.discogs.DiscogsDescriptionManager;
 import feign.Logger;
@@ -17,6 +18,11 @@ public class MusicApiApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(MusicApiApplication.class, args);
+	}
+
+	@Bean
+	CoverArtManager coverArtManager(CoverArtArchiveClient client) {
+		return new CoverArtManagerImpl(client);
 	}
 
 	@Bean
