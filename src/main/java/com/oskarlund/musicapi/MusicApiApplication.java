@@ -5,6 +5,7 @@ import com.oskarlund.musicapi.coverartarchive.CoverArtManagerImpl;
 import com.oskarlund.musicapi.discogs.DiscogsClient;
 import com.oskarlund.musicapi.discogs.DiscogsDescriptionManager;
 import com.oskarlund.musicapi.musicbrainz.MusicBrainzClient;
+import com.oskarlund.musicapi.musicbrainz.MusicBrainzManagerImpl;
 import feign.Logger;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

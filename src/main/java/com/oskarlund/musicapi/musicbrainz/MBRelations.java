@@ -11,6 +11,11 @@ public class MBRelations {
 
 	public MBRelations() { }
 
+	public MBRelations(String type, Map<String, String> url) {
+		this.type = type;
+		this.url = url;
+	}
+
 	public String getType() {
 		return type;
 	}

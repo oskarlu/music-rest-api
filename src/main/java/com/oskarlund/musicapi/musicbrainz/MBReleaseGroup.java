@@ -9,6 +9,12 @@ public class MBReleaseGroup {
 
     public MBReleaseGroup() { }
 
+    public MBReleaseGroup(String id, String title, String firstReleaseDate) {
+        this.id = id;
+        this.title = title;
+        this.firstReleaseDate = firstReleaseDate;
+    }
+
     public String getId() {
         return id;
     }

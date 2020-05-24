@@ -1,4 +1,4 @@
-package com.oskarlund.musicapi.exceptions;
+package com.oskarlund.musicapi.errorhandling;
 
 
 import org.springframework.http.HttpStatus;

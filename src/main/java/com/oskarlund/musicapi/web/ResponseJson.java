@@ -47,13 +47,20 @@ public class ResponseJson {
 	}
 
 	public static class Error {
-
-		private String error;
-		private int status;
+		private final String error;
+		private final int status;
 
 		public Error(String error, int status) {
 			this.error = error;
 			this.status = status;
+		}
+
+		public String getError() {
+			return error;
+		}
+
+		public int getStatus() {
+			return status;
 		}
 	}
 }

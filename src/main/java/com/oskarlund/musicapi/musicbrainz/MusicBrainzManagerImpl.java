@@ -1,9 +1,8 @@
-package com.oskarlund.musicapi;
+package com.oskarlund.musicapi.musicbrainz;
 
 
-import com.oskarlund.musicapi.exceptions.MusicBrainzException;
-import com.oskarlund.musicapi.musicbrainz.MBArtist;
-import com.oskarlund.musicapi.musicbrainz.MusicBrainzClient;
+import com.oskarlund.musicapi.MusicBrainzManager;
+import com.oskarlund.musicapi.errorhandling.MusicBrainzException;
 import feign.FeignException;
 import org.springframework.http.HttpStatus;
 

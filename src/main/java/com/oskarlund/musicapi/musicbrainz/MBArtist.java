@@ -12,6 +12,13 @@ public class MBArtist {
 
     public MBArtist() { }
 
+    public MBArtist(String id, String name, List<MBReleaseGroup> releaseGroups, List<MBRelations> relations) {
+        this.id = id;
+        this.name = name;
+        this.releaseGroups = releaseGroups;
+        this.relations = relations;
+    }
+
     public String getId() {
         return id;
     }

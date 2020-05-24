@@ -43,7 +43,6 @@ public class RestApiController {
         responseBuilder.artist(artist);
 
 
-
         // Fetching covers async and in parallel so we can fetch description in the meantime
         Future<Void> covertArtFuture = coverArtManager.fetchCoverArtAsync(artist, responseBuilder);
 
