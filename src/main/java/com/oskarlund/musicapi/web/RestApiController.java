@@ -4,6 +4,9 @@ import com.oskarlund.musicapi.clients.CoverArtArchiveClient;
 import com.oskarlund.musicapi.clients.DiscogsClient;
 import com.oskarlund.musicapi.clients.MusicBrainzClient;
 import com.oskarlund.musicapi.clients.dtos.*;
+import feign.FeignException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,17 +14,15 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.*;
-import java.util.stream.Collectors;
-
-import static java.util.stream.Collectors.toList;
 
 
 @RestController
 @RequestMapping("/restapi")
 public class RestApiController {
+
+    private static final Logger LOG = LoggerFactory.getLogger(RestApiController.class);
 
     private final MusicBrainzClient musicBrainzClient;
     private final CoverArtArchiveClient coverArtArchiveClient;
@@ -57,10 +58,10 @@ public class RestApiController {
         }
 
         try {
-            System.out.println("BLOCKING on cover art Future to complete before we're done.");
+            LOG.trace("BLOCKING on cover art Future to complete before we're done.");
             covertArt.get(); // block here until all cover art has been fetched
         } catch (InterruptedException | ExecutionException e) {
-            e.printStackTrace();
+            LOG.error("Exception when blocking to wait for cover art.", e);
         }
 
         return ResponseEntity.ok(responseBuilder.build());
@@ -80,9 +81,13 @@ public class RestApiController {
             CAACoverArt cover = coverArtArchiveClient.getCoverArt(rg.getId());
             cover.setId(rg.getId());  // since it's not in the api response but we need to merge this with the release-groups from MB
             return cover;
+        } catch (FeignException e) {
+            // FeignClient exceptions will be due to external api response so not much we can do about it, hence just "warn"
+            LOG.warn("Failed to get cover for \"{}\" due to \"{}\"", rg.getTitle(), e.getMessage());
         } catch (Exception e) {
-            System.out.println("*** Exception when getting cover for " + rg.getId());
+            // Any other exceptions might be more serious, hence "error"
+            LOG.error("Failed to get cover for \"{}\".", rg.getTitle(), e);
         }
-        return new CAACoverArt(rg.getId());
+        return new CAACoverArt(rg.getId()); // essentially returning "<no cover art>"
     }
 }

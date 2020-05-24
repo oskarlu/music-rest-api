@@ -19,6 +19,6 @@ public class MusicApiApplication {
 
 	@Bean
 	Logger.Level feignLoggerLevel() {
-		return Logger.Level.BASIC;
+		return Logger.Level.NONE;
 	}
 }
