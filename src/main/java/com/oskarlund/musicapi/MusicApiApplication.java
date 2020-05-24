@@ -1,5 +1,7 @@
 package com.oskarlund.musicapi;
 
+import com.oskarlund.musicapi.discogs.DiscogsClient;
+import com.oskarlund.musicapi.discogs.DiscogsDescriptionManager;
 import feign.Logger;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -15,6 +17,11 @@ public class MusicApiApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(MusicApiApplication.class, args);
+	}
+
+	@Bean
+	DescriptionManager descriptionManager(DiscogsClient client) {
+		return new DiscogsDescriptionManager(client);
 	}
 
 	@Bean
