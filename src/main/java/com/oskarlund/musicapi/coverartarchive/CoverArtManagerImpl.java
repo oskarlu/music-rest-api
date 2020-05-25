@@ -29,22 +29,22 @@ public class CoverArtManagerImpl implements CoverArtManager {
 			.map(rg -> fetchCoverArt(rg, responseBuilder)).toArray(CompletableFuture[]::new));
 	}
 
-	public Future<Void> fetchCoverArt(MBReleaseGroup rg, ResponseJsonBuilder responseBuilder) {
-		return CompletableFuture.runAsync(() -> responseBuilder.cover(fetchCoverArt(rg)));
+	public Future<Void> fetchCoverArt(MBReleaseGroup releaseGroup, ResponseJsonBuilder responseBuilder) {
+		return CompletableFuture.runAsync(() -> responseBuilder.cover(fetchCoverArt(releaseGroup)));
 	}
 
-	private CAACoverArt fetchCoverArt(MBReleaseGroup rg) {
+	private CAACoverArt fetchCoverArt(MBReleaseGroup releaseGroup) {
 		try {
-			CAACoverArt cover = client.fetchCoverArt(rg.getId());
-			cover.setId(rg.getId());  // since it's not in the api response but we need to merge this with the release-groups from MB
+			CAACoverArt cover = client.fetchCoverArt(releaseGroup.getId());
+			cover.setId(releaseGroup.getId());  // since it's not in the api response but we need to merge this with the release-groups from MB
 			return cover;
 		} catch (FeignException e) {
-			// FeignClient exceptions will be due to external api response so not much we can do about it, hence just "warn"
-			LOG.warn("Failed to get cover for \"{}\" due to \"{}\"", rg.getTitle(), e.getMessage());
+			// Probably not even a warning since there will be a lot of exceptions due to missing art but will leave in for now...
+			LOG.warn("Failed to get cover for \"{}\" due to \"{}\"", releaseGroup.getTitle(), e.getMessage());
 		} catch (Exception e) {
 			// Any other exceptions might be more serious, hence "error"
-			LOG.error("Failed to get cover for \"{}\".", rg.getTitle(), e);
+			LOG.error("Failed to get cover for \"{}\".", releaseGroup.getTitle(), e);
 		}
-		return new CAACoverArt(rg.getId()); // essentially returning "<no cover art>"
+		return new CAACoverArt(releaseGroup.getId()); // essentially returning "<no cover art>"
 	}
 }

@@ -15,7 +15,7 @@ public class DiscogsDescriptionManager implements DescriptionManager {
 
 	Logger LOG = LoggerFactory.getLogger(DiscogsDescriptionManager.class);
 
-	private DiscogsClient discogsClient;
+	private final DiscogsClient discogsClient;
 
 	public DiscogsDescriptionManager(DiscogsClient discogsClient) {
 		this.discogsClient = discogsClient;

@@ -61,7 +61,7 @@ public class ResponseJsonBuilder {
 
 	public void cover(CAACoverArt cover) {
 
-		// This could be inlined but kept intermediate var for readability
+		// This could be inlined but kept intermediate for readability
 		String image = cover.getImages().stream()
 			.filter(CAAImage::isFront) // This filters to only front cover image
 			.map(CAAImage::getImage)
