@@ -2,6 +2,8 @@ package com.oskarlund.musicapi.musicbrainz;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+
 
 public class MBArtist {
 
@@ -42,6 +44,22 @@ public class MBArtist {
                 ", name='" + name + '\'' +
                 ", releaseGroups=" + releaseGroups +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        MBArtist artist = (MBArtist) o;
+        return id.equals(artist.id) &&
+            name.equals(artist.name) &&
+            releaseGroups.equals(artist.releaseGroups) &&
+            relations.equals(artist.relations);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, releaseGroups, relations);
     }
 }
 

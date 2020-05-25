@@ -59,7 +59,7 @@ public class ResponseJsonBuilder {
 		return this;
 	}
 
-	public void cover(CAACoverArt cover) {
+	public ResponseJsonBuilder cover(CAACoverArt cover) {
 
 		// This could be inlined but kept intermediate for readability
 		String image = cover.getImages().stream()
@@ -71,6 +71,7 @@ public class ResponseJsonBuilder {
 			v.setImage(image);
 			return v;
 		});
+		return this;
 	}
 
 	public ResponseJson build() {

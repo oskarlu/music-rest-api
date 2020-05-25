@@ -2,6 +2,7 @@ package com.oskarlund.musicapi.musicbrainz;
 
 
 import java.util.Map;
+import java.util.Objects;
 
 
 public class MBRelations {
@@ -30,6 +31,20 @@ public class MBRelations {
 			"type='" + type + '\'' +
 			", url=" + url +
 			'}';
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		MBRelations that = (MBRelations) o;
+		return type.equals(that.type) &&
+			Objects.equals(url, that.url);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(type, url);
 	}
 }
 

@@ -9,6 +9,7 @@ import feign.FeignException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Collections;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
 
@@ -45,6 +46,6 @@ public class CoverArtManagerImpl implements CoverArtManager {
 			// Any other exceptions might be more serious, hence "error"
 			LOG.error("Failed to get cover for \"{}\".", releaseGroup.getTitle(), e);
 		}
-		return new CAACoverArt(releaseGroup.getId()); // essentially returning "<no cover art>"
+		return new CAACoverArt(releaseGroup.getId(), Collections.emptyList()); // essentially returning "<no cover art>"
 	}
 }

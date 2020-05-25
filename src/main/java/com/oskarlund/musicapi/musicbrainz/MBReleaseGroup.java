@@ -1,6 +1,9 @@
 package com.oskarlund.musicapi.musicbrainz;
 
 
+import java.util.Objects;
+
+
 public class MBReleaseGroup {
 
     private String id;
@@ -34,5 +37,20 @@ public class MBReleaseGroup {
                 ", title='" + title + '\'' +
                 ", firstReleaseDate=" + firstReleaseDate +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        MBReleaseGroup that = (MBReleaseGroup) o;
+        return id.equals(that.id) &&
+            title.equals(that.title) &&
+            firstReleaseDate.equals(that.firstReleaseDate);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, title, firstReleaseDate);
     }
 }

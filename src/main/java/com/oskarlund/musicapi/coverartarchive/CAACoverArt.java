@@ -2,7 +2,7 @@ package com.oskarlund.musicapi.coverartarchive;
 
 
 import java.util.Collection;
-import java.util.Collections;
+import java.util.Objects;
 
 
 public class CAACoverArt {
@@ -12,9 +12,9 @@ public class CAACoverArt {
 
 	public CAACoverArt() {}
 
-	public CAACoverArt(String id) {
+	public CAACoverArt(String id, Collection<CAAImage> images) {
 		this.id = id;
-		this.images = Collections.emptyList();
+		this.images = images;
 	}
 
 	public String getId() {
@@ -34,5 +34,19 @@ public class CAACoverArt {
 		return "CAACoverArt{" +
 			"id='" + id + '\'' +
 			'}';
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		CAACoverArt that = (CAACoverArt) o;
+		return id.equals(that.id) &&
+			Objects.equals(images, that.images);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(id, images);
 	}
 }

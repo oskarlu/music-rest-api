@@ -1,7 +1,10 @@
 package com.oskarlund.musicapi.web;
 
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
+import java.util.Objects;
 
 
 public class ResponseJson {
@@ -9,7 +12,7 @@ public class ResponseJson {
 	private String mbid;
 	private String name;
 	private String description;
-	private Collection<Album> albums;
+	private List<Album> albums;
 
 	public ResponseJson() { }
 
@@ -17,7 +20,7 @@ public class ResponseJson {
 		this.mbid = mbid;
 		this.name = name;
 		this.description = description;
-		this.albums = albums;
+		this.albums = new ArrayList<>(albums);
 	}
 
 	public String getMbid() {
@@ -32,7 +35,7 @@ public class ResponseJson {
 		return description;
 	}
 
-	public Collection<Album> getAlbums() {
+	public List<Album> getAlbums() {
 		return albums;
 	}
 
@@ -62,5 +65,21 @@ public class ResponseJson {
 		public int getStatus() {
 			return status;
 		}
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		ResponseJson that = (ResponseJson) o;
+		return mbid.equals(that.mbid) &&
+			name.equals(that.name) &&
+			Objects.equals(description, that.description) &&
+			Objects.equals(albums, that.albums);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(mbid, name, description, albums);
 	}
 }
