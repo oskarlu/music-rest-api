@@ -21,17 +21,20 @@ public class TestDataConstants {
 	public static final FeignException.NotFound MB_NOT_FOUND = new FeignException.NotFound("Not found in MusicBrainz", Request.create(Request.HttpMethod.GET, "the url", Collections.singletonMap("", Arrays.asList("")), Request.Body.empty()), null);
 	public static final FeignException.BadRequest MB_BAD_REQUEST = new FeignException.BadRequest("MusicBrainz says Bad request", Request.create(Request.HttpMethod.GET, "the url", Collections.singletonMap("", Arrays.asList("")), Request.Body.empty()), null);
 
+	public static final String NEVERMIND_CAA_ID = "1b022e01-4da6-387b-8658-8678046e4cef";
+	public static final String THE_VERY_BEST_CAA_ID = "5bcaeba6-a532-3fa0-b540-75c09f70f759";
+
 	public static final MBArtist NIRVANA = new MBArtist("5b11f4ce-a62d-471e-81fc-a69a8278c7da", "Nirvana",
 		Arrays.asList(
-			new MBReleaseGroup("1b022e01-4da6-387b-8658-8678046e4cef", "Never Mind", "some date"),
-			new MBReleaseGroup("5bcaeba6-a532-3fa0-b540-75c09f70f759", "The Very Best", "some other date")
+			new MBReleaseGroup(NEVERMIND_CAA_ID, "Never Mind", "some date"),
+			new MBReleaseGroup(THE_VERY_BEST_CAA_ID, "The Very Best", "some other date")
 		),
 		Arrays.asList(
 			new MBRelations("Spotify", Collections.singletonMap("resource", "https://open.spotify.com/artist/3fMbdgg4jU18AjLCKBhRSm")),
 			new MBRelations("discogs", Collections.singletonMap("resource", "https://www.discogs.com/artist/15885"))
 		));
 
-	public static final CAACoverArt NEVERMIND = new CAACoverArt("1b022e01-4da6-387b-8658-8678046e4cef",
+	public static final CAACoverArt NEVERMIND = new CAACoverArt(NEVERMIND_CAA_ID,
 		Arrays.asList(
 			new CAAImage(true, "nevermind_front.jpg"),
 			new CAAImage(false, "nevermind_other1.jpg"),
