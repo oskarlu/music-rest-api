@@ -7,7 +7,7 @@ import com.oskarlund.musicapi.musicbrainz.MBArtist;
 import com.oskarlund.musicapi.musicbrainz.MBReleaseGroup;
 
 import java.util.Collection;
-import java.util.Map;
+import java.util.concurrent.ConcurrentMap;
 import java.util.stream.Collectors;
 
 import static java.util.function.Function.identity;
@@ -22,7 +22,7 @@ public class ResponseJsonBuilder {
 	/**
 	 * Keeping albums in a Map for faster lookup when adding cover art.
 	 */
-	private Map<String, Album> albums;
+	private ConcurrentMap<String, Album> albums;
 
 	private ResponseJsonBuilder() {	}
 
@@ -55,10 +55,14 @@ public class ResponseJsonBuilder {
 		// Keeping albums in a Map for faster lookup when adding cover art later.
 		this.albums = releaseGroups.stream()
 			.map(rg -> new Album(rg.getId(), rg.getTitle()))
-			.collect(Collectors.toMap(Album::getId, identity()));
+			.collect(Collectors.toConcurrentMap(Album::getId, identity()));
 		return this;
 	}
 
+	/**
+	 * Will be accessed by multiple threads concurrently.
+	 * @param cover the cover art to set on the album
+	 */
 	public ResponseJsonBuilder cover(CAACoverArt cover) {
 
 		// This could be inlined but kept intermediate for readability
