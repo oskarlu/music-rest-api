@@ -26,12 +26,26 @@ public class CoverArtManagerImpl implements CoverArtManager {
 
 	@Override
 	public Future<Void> fetchCoverArtAsync(MBArtist artist, ResponseJsonBuilder responseBuilder) {
+		/*
+		 * javadoc: "If any of the given CompletableFutures complete exceptionally, then
+		 * the returned CompletableFuture also does so". So we make sure they never do by
+		 * implementing .runAsync().exceptionally(<return empty cover>)
+		 */
 		return CompletableFuture.allOf(artist.getReleaseGroups().stream()
 			.map(rg -> fetchCoverArt(rg, responseBuilder)).toArray(CompletableFuture[]::new));
 	}
 
-	public Future<Void> fetchCoverArt(MBReleaseGroup releaseGroup, ResponseJsonBuilder responseBuilder) {
-		return CompletableFuture.runAsync(() -> responseBuilder.cover(fetchCoverArt(releaseGroup)));
+	public CompletableFuture<Void> fetchCoverArt(MBReleaseGroup releaseGroup, ResponseJsonBuilder responseBuilder) {
+		return CompletableFuture.runAsync(
+			() -> responseBuilder.cover(fetchCoverArt(releaseGroup)))
+			.exceptionally(ex -> {
+				// This should catch CompletableFuture CompletionExceptions and all other errors that are
+				// not FeignClient exceptions (which we handle explicitly when invoking 'client'
+				LOG.error("Failed to get cover for \"{}\".", releaseGroup.getTitle(), ex);
+				CAACoverArt noCover = new CAACoverArt(releaseGroup.getId(), Collections.emptyList());
+				responseBuilder.cover(noCover); // essentially returning "<no cover art>"
+				return null; // == Void
+			});
 	}
 
 	private CAACoverArt fetchCoverArt(MBReleaseGroup releaseGroup) {
@@ -42,9 +56,6 @@ public class CoverArtManagerImpl implements CoverArtManager {
 		} catch (FeignException e) {
 			// Probably not even a warning since there will be a lot of exceptions due to missing art but will leave in for now...
 			LOG.warn("Failed to get cover for \"{}\" due to \"{}\"", releaseGroup.getTitle(), e.getMessage());
-		} catch (Exception e) {
-			// Any other exceptions might be more serious, hence "error"
-			LOG.error("Failed to get cover for \"{}\".", releaseGroup.getTitle(), e);
 		}
 		return new CAACoverArt(releaseGroup.getId(), Collections.emptyList()); // essentially returning "<no cover art>"
 	}
