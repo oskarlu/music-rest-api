@@ -15,9 +15,7 @@ import static java.util.function.Function.identity;
 
 public class ResponseJsonBuilder {
 
-	private String mbid;
-	private String name;
-	private String description;
+	private String mbid, name, description;
 
 	/**
 	 * Keeping albums in a Map for faster lookup when adding cover art.
@@ -66,7 +64,7 @@ public class ResponseJsonBuilder {
 	public ResponseJsonBuilder cover(CAACoverArt cover) {
 
 		// This could be inlined but kept intermediate for readability
-		String image = cover.getImages().stream()
+		final String image = cover.getImages().stream()
 			.filter(CAAImage::isFront) // This filters to only front cover image
 			.map(CAAImage::getImage)
 			.findFirst().orElse("<no cover image>");

@@ -9,9 +9,10 @@ import org.mockito.internal.stubbing.answers.Returns;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static com.oskarlund.musicapi.TestDataConstants.*;
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.mock;
 
 
 class CoverArtManagerImplTest {

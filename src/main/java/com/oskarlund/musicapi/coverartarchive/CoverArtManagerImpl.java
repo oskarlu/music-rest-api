@@ -10,8 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Collections;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.Future;
+import java.util.concurrent.*;
 
 
 public class CoverArtManagerImpl implements CoverArtManager {
@@ -31,16 +30,20 @@ public class CoverArtManagerImpl implements CoverArtManager {
 		 * the returned CompletableFuture also does so". So we make sure they never do by
 		 * implementing .runAsync().exceptionally(<return empty cover>)
 		 */
+
+		// Makes queue FIFO instead of LIFO (as it is when no explicit executor)
+		ExecutorService executor = Executors.newWorkStealingPool(ForkJoinPool.getCommonPoolParallelism());
+
 		return CompletableFuture.allOf(artist.getReleaseGroups().stream()
-			.map(rg -> fetchCoverArt(rg, responseBuilder)).toArray(CompletableFuture[]::new));
+			.map(rg -> fetchCoverArt(rg, responseBuilder, executor)).toArray(CompletableFuture[]::new));
 	}
 
-	public CompletableFuture<Void> fetchCoverArt(MBReleaseGroup releaseGroup, ResponseJsonBuilder responseBuilder) {
+	public CompletableFuture<Void> fetchCoverArt(MBReleaseGroup releaseGroup, ResponseJsonBuilder responseBuilder, ExecutorService executor) {
 		return CompletableFuture.runAsync(
-			() -> responseBuilder.cover(fetchCoverArt(releaseGroup)))
+			() -> responseBuilder.cover(fetchCoverArt(releaseGroup)), executor)
 			.exceptionally(ex -> {
 				// This should catch CompletableFuture CompletionExceptions and all other errors that are
-				// not FeignClient exceptions (which we handle explicitly when invoking 'client'
+				// not FeignClient exceptions (which we handle explicitly when invoking 'client')
 				LOG.error("Failed to get cover for \"{}\".", releaseGroup.getTitle(), ex);
 				CAACoverArt noCover = new CAACoverArt(releaseGroup.getId(), Collections.emptyList());
 				responseBuilder.cover(noCover); // essentially returning "<no cover art>"
@@ -54,8 +57,8 @@ public class CoverArtManagerImpl implements CoverArtManager {
 			cover.setId(releaseGroup.getId());  // since it's not in the api response but we need to merge this with the release-groups from MB
 			return cover;
 		} catch (FeignException e) {
-			// Probably not even a warning since there will be a lot of exceptions due to missing art but will leave in for now...
-			LOG.warn("Failed to get cover for \"{}\" due to \"{}\"", releaseGroup.getTitle(), e.getMessage());
+			// Probably not even a warning since there will be a lot of exceptions due to missing art
+			//LOG.warn("Failed to get cover for \"{}\" due to \"{}\"", releaseGroup.getTitle(), e.getMessage());
 		}
 		return new CAACoverArt(releaseGroup.getId(), Collections.emptyList()); // essentially returning "<no cover art>"
 	}
