@@ -92,8 +92,8 @@ class RestApiControllerIntegrationTest {
 		System.out.println("Shutting down executor...");
 		scheduledExecutor.shutdown();
 
-		System.out.println("Await termination for up to 10 seconds...");
-		scheduledExecutor.awaitTermination(10, TimeUnit.SECONDS);
+		System.out.println("Await termination for up to 15 seconds...");
+		scheduledExecutor.awaitTermination(15, TimeUnit.SECONDS);
 
 		if (!scheduledExecutor.isTerminated()) {
 			boolean cancelled = scheduledFuture.cancel(false);
