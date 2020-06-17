@@ -4,7 +4,8 @@ orbs:
   maven: circleci/maven@1.0.1
 
 executors:
-  default:
+  maven:
+    description: The docker container to use when running Maven builds
     docker:
       - image: circleci/openjdk:10-jdk-node
 
