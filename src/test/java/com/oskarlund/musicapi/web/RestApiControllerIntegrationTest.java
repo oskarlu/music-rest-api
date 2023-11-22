@@ -2,6 +2,7 @@ package com.oskarlund.musicapi.web;
 
 
 import com.oskarlund.musicapi.MusicApiApplication;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -59,6 +60,7 @@ class RestApiControllerIntegrationTest {
 	 * 1/s the MusicBrainz and CAA apis are rate limiting us...
 	 */
 	@Test
+	@Disabled
 	void testWithSomeLoad() throws InterruptedException, ExecutionException {
 		final long start = System.currentTimeMillis();
 		String mjEndpoint = String.format(URL, port, MJ_MBID);
