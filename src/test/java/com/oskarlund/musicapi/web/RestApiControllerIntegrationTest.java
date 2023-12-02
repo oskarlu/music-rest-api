@@ -60,7 +60,7 @@ class RestApiControllerIntegrationTest {
 	 * 1/s the MusicBrainz and CAA apis are rate limiting us...
 	 */
 	@Test
-	@Disabled
+	//@Disabled
 	void testWithSomeLoad() throws InterruptedException, ExecutionException {
 		final long start = System.currentTimeMillis();
 		String mjEndpoint = String.format(URL, port, MJ_MBID);
