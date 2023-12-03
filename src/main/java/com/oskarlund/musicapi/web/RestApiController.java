@@ -37,6 +37,8 @@ public class RestApiController {
     @GetMapping(value = "/artist/{mbid}", produces = MediaType.APPLICATION_JSON_VALUE)
     ResponseEntity<ResponseJson> getArtist(@PathVariable("mbid") String mbId) throws ResponseStatusException {
 
+        LOG.trace("*** request for artist with id {}", mbId);
+
         ResponseJsonBuilder responseBuilder = ResponseJsonBuilder.create();
 
         MBArtist artist = musicBrainzManager.getArtist(mbId);

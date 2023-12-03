@@ -12,7 +12,6 @@ import org.springframework.boot.web.server.LocalServerPort;
 import java.util.Optional;
 import java.util.Random;
 import java.util.concurrent.*;
-import java.util.stream.IntStream;
 
 import static com.oskarlund.musicapi.TestDataConstants.MJ_MBID;
 import static com.oskarlund.musicapi.TestDataConstants.NIRVANA_MBID;
@@ -60,7 +59,7 @@ class RestApiControllerIntegrationTest {
 	 * 1/s the MusicBrainz and CAA apis are rate limiting us...
 	 */
 	@Test
-	//@Disabled
+	@Disabled
 	void testWithSomeLoad() throws InterruptedException, ExecutionException {
 		final long start = System.currentTimeMillis();
 		String mjEndpoint = String.format(URL, port, MJ_MBID);
