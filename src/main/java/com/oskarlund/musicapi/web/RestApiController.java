@@ -37,7 +37,7 @@ public class RestApiController {
     @GetMapping(value = "/artist/{mbid}", produces = MediaType.APPLICATION_JSON_VALUE)
     ResponseEntity<ResponseJson> getArtist(@PathVariable("mbid") String mbId) throws ResponseStatusException {
 
-        LOG.trace("*** request for artist with id {}", mbId);
+        LOG.debug("*** request for artist with id {}", mbId);
 
         ResponseJsonBuilder responseBuilder = ResponseJsonBuilder.create();
 
@@ -45,7 +45,7 @@ public class RestApiController {
         responseBuilder.artist(artist);
 
 
-        // Fetching covers async and in parallel so we can fetch description in the meantime
+        // Fetching covers async and in parallel, so we can fetch description in the meantime
         Future<Void> covertArtFuture = coverArtManager.fetchCoverArtAsync(artist, responseBuilder);
 
 
@@ -59,7 +59,7 @@ public class RestApiController {
             covertArtFuture.get(); // block here until all cover art has been fetched
         } catch (Exception e) {
             LOG.error("Exception when blocking to wait for cover art.", e);
-            // Anything gone wrong with cover art is not catastrophic so we still respond normally
+            // Anything gone wrong with cover art is not catastrophic, so we still respond normally
         }
 
         return ResponseEntity.ok(responseBuilder.build());
