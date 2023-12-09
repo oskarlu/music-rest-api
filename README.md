@@ -5,8 +5,8 @@
 2. $ mvn install  (compile + test)
 3. $ mvn spring-boot:run
 4. connect to rest api:
-    - MJ: http://localhost:8080/restapi/artist/f27ec8db-af05-4f36-916e-3d57f91ecf5e
-    - Nirvana: http://localhost:8080/restapi/artist/5b11f4ce-a62d-471e-81fc-a69a8278c7da
+    - MJ: http://localhost:8080/api/artist/f27ec8db-af05-4f36-916e-3d57f91ecf5e
+    - Nirvana: http://localhost:8080/api/artist/5b11f4ce-a62d-471e-81fc-a69a8278c7da
 
 # About
 The app uses Spring Boot which I chose mainly because I wanted to learn it more. I had only played around a bit with the GitHub API using Spring Boot and FeignClient before so figured this was a good opportunity to go a bit deeper.

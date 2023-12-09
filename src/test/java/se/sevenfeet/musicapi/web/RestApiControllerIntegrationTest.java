@@ -30,7 +30,7 @@ class RestApiControllerIntegrationTest {
 	@Autowired
 	private TestRestTemplate restTemplate;
 
-	private static final String URL = "http://localhost:%d/restapi/artist/%s";
+	private static final String URL = "http://localhost:%d/api/artist/%s";
 
 	@Test
 	void getArtist_Nirvana() {

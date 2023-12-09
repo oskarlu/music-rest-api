@@ -13,7 +13,7 @@ public class CustomErrorController {
 
     @ExceptionHandler(Exception.class)
     public String handleException(Exception ex, Model model) {
-        LOG.error("Exception thrown: {}", ex.getClass().getSimpleName(), ex);
+        LOG.error("*** CustomErrorController.handleException({})", ex.getClass().getSimpleName(), ex);
 
         model.addAttribute("status", 500);
         model.addAttribute("error", ex.getClass().getSimpleName());

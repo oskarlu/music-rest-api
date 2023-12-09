@@ -19,7 +19,7 @@ import java.util.concurrent.Future;
 
 
 @RestController
-@RequestMapping("/restapi")
+@RequestMapping("/api")
 public class RestApiController {
 
     private static final Logger LOG = LoggerFactory.getLogger(RestApiController.class);
@@ -37,7 +37,7 @@ public class RestApiController {
     @GetMapping(value = "/artist/{mbid}", produces = MediaType.APPLICATION_JSON_VALUE)
     ResponseEntity<ResponseJson> getArtist(@PathVariable("mbid") String mbId) throws ResponseStatusException {
 
-        LOG.debug("*** request for artist with id {}", mbId);
+        LOG.debug("*** request for artist with mbid {}", mbId);
 
         ResponseJsonBuilder responseBuilder = ResponseJsonBuilder.create();
 
