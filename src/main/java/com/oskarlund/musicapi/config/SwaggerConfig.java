@@ -34,8 +34,6 @@ public class SwaggerConfig implements WebMvcConfigurer {
                 .addResourceLocations(CLASSPATH_RESOURCE_LOCATION);
         registry.addResourceHandler("**")
                 .addResourceLocations(resourceProperties.getStaticLocations());
-        registry.addResourceHandler("favicon.ico")
-                .addResourceLocations(resourceProperties.getStaticLocations());
 //        registry.addResourceHandler("/webjars/**")
 //                .addResourceLocations("/webjars/");
     }
