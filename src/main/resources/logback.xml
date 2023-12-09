@@ -13,7 +13,7 @@
         <appender-ref ref="STDOUT"/>
     </root>
 
-    <logger name="com.oskarlund" level="debug" additivity="false">
+    <logger name="se.sevenfeet" level="debug" additivity="false">
         <appender-ref ref="STDOUT"/>
     </logger>
 
