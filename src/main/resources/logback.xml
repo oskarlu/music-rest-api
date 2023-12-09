@@ -1,6 +1,6 @@
 <configuration>
 
-    <conversionRule conversionWord="tid" converterClass="com.oskarlund.musicapi.util.ThreadIdConverter" />
+    <conversionRule conversionWord="tid" converterClass="se.sevenfeet.musicapi.util.ThreadIdConverter" />
 
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
