@@ -25,7 +25,7 @@ public class MusicBrainzManagerImpl implements MusicBrainzManager {
 			throw new MusicBrainzException(HttpStatus.resolve(e.status()), "MusicBrainz responded with: " + e.getMessage(), e);
 		}
 		catch (Exception e) {
-			throw new MusicBrainzException(HttpStatus.INTERNAL_SERVER_ERROR, "Something went wrong ;) ;) ;) ;) ;)", e);
+			throw new MusicBrainzException(HttpStatus.INTERNAL_SERVER_ERROR, "Something went wrong ;)", e);
 		}
 	}
 }

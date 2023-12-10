@@ -19,8 +19,10 @@ public class CatchAllErrorController implements ErrorController {
 
     @RequestMapping("/error")
     public String handleError(WebRequest request, Model model) {
-        LOG.debug("*** CatchAllErrorController.handleError({})", request.getContextPath());
         HttpStatus httpStatus = getStatus(request);
+
+        String uri = (String) request.getAttribute(RequestDispatcher.ERROR_REQUEST_URI, RequestAttributes.SCOPE_REQUEST);
+        LOG.debug("*** WebRequest to '{}' resulted in error: {}", uri, httpStatus.toString());
         model.addAttribute("status", httpStatus.value());
         model.addAttribute("error", httpStatus.name());
         return "error/error";

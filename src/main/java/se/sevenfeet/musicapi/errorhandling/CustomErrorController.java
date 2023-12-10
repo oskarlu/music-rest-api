@@ -14,7 +14,7 @@ public class CustomErrorController {
 
     @ExceptionHandler(Exception.class)
     public String handleException(Exception ex, Model model) {
-        LOG.error("*** CustomErrorController.handleException({})", ex.getClass().getSimpleName(), ex);
+        LOG.error(ex.getMessage(), ex.getClass().getSimpleName(), ex);
 
         model.addAttribute("status", HttpStatus.INTERNAL_SERVER_ERROR.value());
         model.addAttribute("error", HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase());
