@@ -1,6 +1,5 @@
 package se.sevenfeet.musicapi.musicbrainz;
 
-
 import se.sevenfeet.musicapi.MusicBrainzManager;
 import se.sevenfeet.musicapi.errorhandling.MusicBrainzException;
 import feign.FeignException;

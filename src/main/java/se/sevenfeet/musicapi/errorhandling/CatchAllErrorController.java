@@ -1,4 +1,4 @@
-package se.sevenfeet.musicapi.config;
+package se.sevenfeet.musicapi.errorhandling;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

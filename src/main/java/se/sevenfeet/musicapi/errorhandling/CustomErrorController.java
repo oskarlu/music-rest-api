@@ -1,7 +1,8 @@
-package se.sevenfeet.musicapi.config;
+package se.sevenfeet.musicapi.errorhandling;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -15,9 +16,9 @@ public class CustomErrorController {
     public String handleException(Exception ex, Model model) {
         LOG.error("*** CustomErrorController.handleException({})", ex.getClass().getSimpleName(), ex);
 
-        model.addAttribute("status", 500);
-        model.addAttribute("error", ex.getClass().getSimpleName());
-        model.addAttribute("message", ex.getMessage() != null ? ex.getMessage() : "null msg");
+        model.addAttribute("status", HttpStatus.INTERNAL_SERVER_ERROR.value());
+        model.addAttribute("error", HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase());
+        model.addAttribute("message", ex.getMessage());
         return "error/error";
     }
 }
