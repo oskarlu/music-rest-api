@@ -1,5 +1,3 @@
-(testing Jenkins with webhook: #1)
-
 # Build & Run instructions
 1. clone this repo
 2. $ mvn install  (compile + test)

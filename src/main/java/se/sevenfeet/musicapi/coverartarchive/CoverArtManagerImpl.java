@@ -38,13 +38,13 @@ public class CoverArtManagerImpl implements CoverArtManager {
 			.map(rg -> fetchCoverArt(rg, responseBuilder, executor)).toArray(CompletableFuture[]::new));
 	}
 
-	public CompletableFuture<Void> fetchCoverArt(MBReleaseGroup releaseGroup, ResponseJsonBuilder responseBuilder, ExecutorService executor) {
+	private CompletableFuture<Void> fetchCoverArt(MBReleaseGroup releaseGroup, ResponseJsonBuilder responseBuilder, ExecutorService executor) {
 		return CompletableFuture.runAsync(
 			() -> responseBuilder.cover(fetchCoverArt(releaseGroup)), executor)
 			.exceptionally(ex -> {
 				// This should catch CompletableFuture CompletionExceptions and all other errors that are
 				// not FeignClient exceptions (which we handle explicitly when invoking 'client')
-				LOG.error("Failed to get cover for \"{}\".", releaseGroup.getTitle(), ex);
+				LOG.error("Failed to get cover for '{}'.", releaseGroup.getTitle(), ex);
 				CAACoverArt noCover = new CAACoverArt(releaseGroup.getId(), Collections.emptyList());
 				responseBuilder.cover(noCover); // essentially returning "<no cover art>"
 				return null; // == Void
