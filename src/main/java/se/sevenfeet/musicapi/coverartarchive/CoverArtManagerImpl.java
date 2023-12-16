@@ -18,9 +18,13 @@ public class CoverArtManagerImpl implements CoverArtManager {
 	private static final Logger LOG = LoggerFactory.getLogger(CoverArtManagerImpl.class);
 
 	private final CoverArtArchiveClient client;
+	private final ExecutorService executor;
 
 	public CoverArtManagerImpl(CoverArtArchiveClient client) {
 		this.client = client;
+
+		// Makes queue FIFO instead of LIFO (as it is when no explicit executor)
+		executor = Executors.newWorkStealingPool(ForkJoinPool.getCommonPoolParallelism());
 	}
 
 	@Override
@@ -30,9 +34,6 @@ public class CoverArtManagerImpl implements CoverArtManager {
 		 * the returned CompletableFuture also does so". So we make sure they never do by
 		 * implementing .runAsync().exceptionally(<return empty cover>)
 		 */
-
-		// Makes queue FIFO instead of LIFO (as it is when no explicit executor)
-		ExecutorService executor = Executors.newWorkStealingPool(ForkJoinPool.getCommonPoolParallelism());
 
 		return CompletableFuture.allOf(artist.getReleaseGroups().stream()
 			.map(rg -> fetchCoverArt(rg, responseBuilder, executor)).toArray(CompletableFuture[]::new));
